@@ -1,0 +1,21 @@
+.rule-name-des {
+    display: flex;
+    margin-top: 30px;
+    align-items: center;
+    margin-right: 10px;
+}
+.rule-name-des span {
+    width: 80px;
+}
+.select-field {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.select-field-item {
+    margin-right: 30px;
+    margin-bottom: 20px;
+}
+.select-field-item > span {
+    padding-right: 8px;
+}
