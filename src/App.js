@@ -7,8 +7,8 @@ function App() {
     <>
       <HashRouter>
         <Routes>
-          <Route exact path='/' element={ <CreateRule/> }/>
-          <Route exact path='/find-people' element={ <FindPeople /> }/>
+          <Route exact path='/create_rule' element={ <CreateRule/> }/>
+          <Route exact path='/' element={ <FindPeople /> }/>
         </Routes>
       </HashRouter>
     </>

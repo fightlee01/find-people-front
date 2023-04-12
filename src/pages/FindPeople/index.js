@@ -1,7 +1,8 @@
-import { Button, Checkbox, Col, Input, Row, Table } from "antd";
+import { Button, Checkbox, Col, Divider, Input, Row, Table } from "antd";
 import './index.css'
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const FindPeople = () => {
   const [rules, setRules] = useState([])
@@ -106,6 +107,7 @@ const FindPeople = () => {
     const resultRuleIds = Object.keys(result.data.data.possibleOrg)
     // console.log(resultRuleIds)
     // console.log(rules)
+    console.log(resultData)
     for (let i = 0; i < resultRuleIds.length; i++) {
       // console.log(resultData[resultRuleIds[i]])
       let tmpRuleName = ''
@@ -114,51 +116,31 @@ const FindPeople = () => {
           tmpRuleName = rules[j].rule_name
           break
         }
+        if(resultRuleIds[i] === 'intersection') {
+          tmpRuleName = '融合规则'
+          break
+        }
       }
       for (let orgItem in resultData[resultRuleIds[i]]) {
-        // console.log(orgItem)
-        resultList.push({
-          ruleName: tmpRuleName,
-          ruleId: resultRuleIds[i],
-          orgName: orgItem,
-          weight: resultData[resultRuleIds[i]][orgItem]
-        })
+        if(tmpRuleName === '融合规则') {
+          resultList.unshift({
+            ruleName: tmpRuleName,
+            ruleId: resultRuleIds[i],
+            orgName: orgItem,
+            weight: resultData[resultRuleIds[i]][orgItem]
+          })
+        } else {
+          resultList.push({
+            ruleName: tmpRuleName,
+            ruleId: resultRuleIds[i],
+            orgName: orgItem,
+            weight: resultData[resultRuleIds[i]][orgItem]
+          })
+        }
       }
     }
     // console.log(resultList)
     setResultList([...resultList])
-
-  }
-  // 单元格合并
-  const mergeCells = (data, type) => {
-    const objResult = {}
-    const arr = []
-    const arr1 = []
-    const arr2 = [0]
-    const arrResult = []
-    let len = 0
-    let typeResult
-    data.map(val => {
-      for (const item in val) {
-        if (item === type) {
-          typeResult = val[item]
-        }
-      }
-      const objArray = objResult[typeResult] || []
-      objArray.push(objArray)
-      objResult[typeResult] = objArray
-    })
-    for(const item in objResult) {
-      arr.push(objResult[item])
-    }
-    arr.map((val, key) => {
-      arr1.push(val.length)
-      len += val.length
-      arr2.push(len)
-    })
-    arrResult[0] = arr1
-    arrResult[1] = arr2
-    return arrResult
   }
 
   const columns = [
@@ -166,23 +148,7 @@ const FindPeople = () => {
       title: '规则名称',
       dataIndex: 'ruleName',
       key: 'ruleName',
-      width: 120,
-      render: (val, row, index) => {
-        const obj = {
-          children: val,
-          props: {}
-        }
-        const arrResult = mergeCells(resultList, 'ruleId')
-        for(let i=0;i<arrResult.length;i++) {
-          if(index === arrResult[1][i]) {
-            obj.props.rowSpan = arrResult[0][i]
-          }
-          if(index > arrResult[1][i] && index < arrResult[1][i+1]) {
-            obj.props.rowSpan = 0
-          }
-        }
-        return obj
-      }
+      width: 120
     },
     {
       title: '组织名称',
@@ -190,7 +156,7 @@ const FindPeople = () => {
       key: 'OrgName'
     },
     {
-      title: '权重',
+      title: '优先级',
       dataIndex: 'weight',
       key: 'weight'
     }
@@ -226,6 +192,12 @@ const FindPeople = () => {
                 }) : '' }
               </Col>
             </Row>
+            <Row>
+              <Col>
+                {/*<Button onClick={onRuleConfig}>规则配置</Button>*/}
+                <Link to='/create_rule'>规则配置</Link>
+              </Col>
+            </Row>
           </Col>
           <Col span={ 12 } style={ {border: '1px solid #ccc', padding: '10px'} }>
             <Row>
@@ -246,6 +218,11 @@ const FindPeople = () => {
                 { fields.length > 0 ? <Button type='primary' onClick={ onFind }>查找</Button> : '' }
               </Col>
             </Row>
+          </Col>
+        </Row>
+        <Row>
+          <Col offset={ 4 } span={ 16 }>
+            <Divider plain>查找结果</Divider>
           </Col>
         </Row>
         <Row>
