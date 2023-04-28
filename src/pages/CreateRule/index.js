@@ -283,7 +283,7 @@ const CreateRule = () => {
     <>
       <Row justify={ 'center' }>
         <Col>
-          <h1>基于规则匹配的人员查找算法</h1>
+          <h1>基于档案库的查找规则配置</h1>
         </Col>
       </Row>
       <Row>

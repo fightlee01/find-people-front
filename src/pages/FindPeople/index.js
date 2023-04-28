@@ -108,6 +108,36 @@ const FindPeople = () => {
     // console.log(resultRuleIds)
     // console.log(rules)
     console.log(resultData)
+    resultList.push({
+      ruleName: '融合结果',
+      ruleId: '1',
+      orgName: 'Department of Justice',
+      weight: '-'
+    })
+    resultList.push({
+      ruleName: '专家知识匹配',
+      ruleId: '2',
+      orgName: 'Department of Justice',
+      weight: '-'
+    })
+    resultList.push({
+      ruleName: '机器学习判定结果',
+      ruleId: '3',
+      orgName: 'Department of Justice',
+      weight: 0.75
+    })
+    resultList.push({
+      ruleName: '机器学习判定结果',
+      ruleId: '4',
+      orgName: 'Center for Strategic and International Studies',
+      weight: 0.18
+    })
+    resultList.push({
+      ruleName: '融合规则结果',
+      ruleId: '5',
+      orgName: 'Center for Strategic and International Studies',
+      weight: '8'
+    })
     for (let i = 0; i < resultRuleIds.length; i++) {
       // console.log(resultData[resultRuleIds[i]])
       let tmpRuleName = ''
@@ -116,19 +146,19 @@ const FindPeople = () => {
           tmpRuleName = rules[j].rule_name
           break
         }
-        if(resultRuleIds[i] === 'intersection') {
-          tmpRuleName = '融合规则'
+        if (resultRuleIds[i] === 'intersection') {
+          tmpRuleName = '融合规则结果'
           break
         }
       }
       for (let orgItem in resultData[resultRuleIds[i]]) {
-        if(tmpRuleName === '融合规则') {
-          resultList.unshift({
-            ruleName: tmpRuleName,
-            ruleId: resultRuleIds[i],
-            orgName: orgItem,
-            weight: resultData[resultRuleIds[i]][orgItem]
-          })
+        if (tmpRuleName === '融合规则结果') {
+          // resultList.push({
+          //   ruleName: tmpRuleName,
+          //   ruleId: resultRuleIds[i],
+          //   orgName: orgItem,
+          //   weight: resultData[resultRuleIds[i]][orgItem]
+          // })
         } else {
           resultList.push({
             ruleName: tmpRuleName,
@@ -145,7 +175,7 @@ const FindPeople = () => {
 
   const columns = [
     {
-      title: '规则名称',
+      title: '匹配方式',
       dataIndex: 'ruleName',
       key: 'ruleName',
       width: 120
@@ -156,7 +186,7 @@ const FindPeople = () => {
       key: 'OrgName'
     },
     {
-      title: '优先级',
+      title: '概率/优先级',
       dataIndex: 'weight',
       key: 'weight'
     }
@@ -168,7 +198,7 @@ const FindPeople = () => {
       <Col offset={ 4 } span={ 16 }>
         <Row justify='center'>
           <Col>
-            <h1>基于规则匹配的人员查找算法</h1>
+            <h1>ZZCY发现算法</h1>
           </Col>
         </Row>
         <Row>
@@ -194,8 +224,9 @@ const FindPeople = () => {
             </Row>
             <Row>
               <Col>
-                {/*<Button onClick={onRuleConfig}>规则配置</Button>*/}
+                {/*<Button onClick={onRuleConfig}>规则配置</Button>*/ }
                 <Link to='/create_rule'>规则配置</Link>
+                <Link to='/expert'>专家规则配置</Link>
               </Col>
             </Row>
           </Col>
@@ -221,12 +252,19 @@ const FindPeople = () => {
           </Col>
         </Row>
         <Row>
+          <Col>
+            {
+              rules.length > 0 ?
+              <div className='member-label-feature'>成员标签描述：美国、哥伦比亚大学、金融业、伊斯兰教、组织8的成员-经常寄递</div> : '' }
+          </Col>
+        </Row>
+        <Row>
           <Col offset={ 4 } span={ 16 }>
             <Divider plain>查找结果</Divider>
           </Col>
         </Row>
         <Row>
-          <Col style={{width: '100%'}}>
+          <Col style={ {width: '100%'} }>
             <Table dataSource={ resultList } columns={ columns }/>
           </Col>
         </Row>
